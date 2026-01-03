@@ -4,7 +4,7 @@ import './App.css'
 import { useEffect, useState } from 'react';
 
 
-function App() {
+function AdminScreen() {
   const hostname = import.meta.env.VITE_BACKEND_HOSTNAME
   const [websocket, setWebsocket] = useState<WebSocket|null>(null)
 
@@ -49,4 +49,4 @@ function App() {
   )
 }
 
-export default App
+export default AdminScreen

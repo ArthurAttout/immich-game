@@ -8,3 +8,4 @@ RUN npm ci && npm run build
 
 FROM nginx:latest
 COPY --from=build /sourceapp/dist /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/nginx.conf
