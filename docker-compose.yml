@@ -1,5 +1,7 @@
 services:
+
   blurrer:
+    container_name: immich-game-blurrer
     environment:
       - IMMICH_TOKEN=DrplBv0lMfK56GNw5yPRhiuVF1SCGVmdib1LcdPlps
       - IMMICH_HOST=http://nas.ecurie:2283/
@@ -9,13 +11,17 @@ services:
       - "9001:9001"
 
   server:
+    container_name: immich-game-server
     build:
       context: server/
     ports:
       - "8080:8080"
 
   frontend:
+    container_name: immich-game-frontend
     build:
+      args:
+        - VITE_BACKEND_HOSTNAME=localhost:8080
       context: client/
     ports:
       - "8081:80"

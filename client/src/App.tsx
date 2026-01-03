@@ -1,11 +1,28 @@
-import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { useEffect, useState } from 'react';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const hostname = import.meta.env.VITE_BACKEND_HOSTNAME
+  const [websocket, setWebsocket] = useState<WebSocket|null>(null)
 
+
+  useEffect(() => {
+    const ws = new WebSocket(`ws://${hostname}`);
+    ws.addEventListener('open', () => {
+      console.log('Connected to backend')
+    });
+    setWebsocket(ws)
+  },[])
+  const dump  = () => {
+    console.log(hostname)
+    if(!websocket){
+      return
+    }
+    websocket.send(Math.random().toString());
+  }
   return (
     <>
       <div>
@@ -18,8 +35,8 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={dump}>
+          Talk to {hostname}
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
