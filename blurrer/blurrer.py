@@ -24,6 +24,9 @@ class Blurrer:
       logger.warning(f'Asset {asset_id} has no faces in it')
       return
     
+    resize_width = 0
+    resize_height = 0
+
     for person in metadata.json()['people']:
       name = person['name']
       if len(person['faces']) == 0:
@@ -34,6 +37,8 @@ class Blurrer:
       box_x2 = face['boundingBoxX2']
       box_y1 = face['boundingBoxY1']
       box_y2 = face['boundingBoxY2']
+      resize_width = face['imageWidth']
+      resize_height = face['imageHeight']
       data[name] = [box_x1, box_x2, box_y1, box_y2]
 
     
@@ -46,6 +51,7 @@ class Blurrer:
       return -1
 
     img = Image.open(BytesIO(img.content))
+    img = img.resize([resize_width, resize_height])
 
     # Source - https://stackoverflow.com/q/56987112
     # Posted by Otor
@@ -55,14 +61,17 @@ class Blurrer:
     mask = Image.new('L', img.size, 0)
     draw = ImageDraw.Draw(mask)
 
+
     for person in data:
       face = data[person]
-      draw.rectangle([ (face[0],face[2]), (face[1]+50,face[3]+50) ], fill=255)
+      (x1, x2, y1, y2) = face
+      draw.rectangle([ (x1, y1), (x2, y2) ], fill=255)
 
     # Blur image
     blurred = img.filter(ImageFilter.GaussianBlur(52))
 
     # Paste blurred region and save result
     img.paste(blurred, mask=mask)
+    
     img.save(f'{job_id}.png')
     logger.info(f'Saved blurred asset to file {job_id}.png')
