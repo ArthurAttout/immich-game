@@ -1,0 +1,49 @@
+Log in
+	- Who are you ? (avatar)
+	- Checks that username is unique
+	- Sets up cookie with unique username
+
+In this picture ...
+	- Who (1pt per face)
+	- When (year only, 5pts) - 1 year diff -> 2pts
+	- Where (?)
+	
+React app 
+	- Websocket for start/stop/prompt 
+	
+On tv : 
+	- Picture fullscreen
+	- Timeout
+	- Indicator (picture x out of y)
+	- Scoreboard 
+
+----------------
+
+Protocol: 
+
+Websocket
+	- Client says {"login":"username"}
+		- Server checks for uniqueness
+		- Ok from server : store username in cookie
+		- Tell TV new user added
+	- TV says "I am TV"
+		- Server keeps websocket of TV in memory
+	- Server says "in wait room"
+		- TV displays ready users
+	- Administrator says go 
+	- Server picks asset (and meta)
+		- blurs image 
+		- stores blurred output to shitty storage
+		- sends storage link to TV websocket
+	- TV shows blurred image (+ counter "step X out of Y")
+	- Client receives "What is this image ?"
+		- User can pick names
+		- User can pick year
+	- Client answers "Image is X/Y/Z"
+		- Server forwards info to TV
+		- TV shows "user X has answered"
+	- Server says 5 seconds left
+		- Client shows alarm
+	
+		
+	

@@ -1,0 +1,23 @@
+services:
+  blurrer:
+    environment:
+      - IMMICH_TOKEN=DrplBv0lMfK56GNw5yPRhiuVF1SCGVmdib1LcdPlps
+      - IMMICH_HOST=http://nas.ecurie:2283/
+    build:
+      context: blurrer/
+    ports:
+      - "9001:9001"
+
+  server:
+    build:
+      context: server/
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: client/
+    ports:
+      - "8081:80"
+
+  
