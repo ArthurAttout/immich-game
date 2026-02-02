@@ -1,11 +1,10 @@
 FROM node:latest AS build
+RUN apt-get update && apt-get install -y nginx
 
 COPY . /sourceapp
 WORKDIR /sourceapp
-ARG VITE_BACKEND_HOSTNAME
-RUN echo VITE_BACKEND_HOSTNAME=$VITE_BACKEND_HOSTNAME > .env
-RUN npm ci && npm run build
-
-FROM nginx:latest
-COPY --from=build /sourceapp/dist /usr/share/nginx/html
+RUN npm ci
 COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

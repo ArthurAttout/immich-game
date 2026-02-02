@@ -1,51 +1,45 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { useEffect, useState } from 'react';
+import { useBackendREST } from './Providers/BackendRESTProvider';
+import type { Player, Room } from './domain/Room';
 
 
 function AdminScreen() {
-  const hostname = import.meta.env.VITE_BACKEND_HOSTNAME
-  const [websocket, setWebsocket] = useState<WebSocket|null>(null)
+  
+  const {fetchRooms} = useBackendREST()
+  const [allRooms, setAllRooms] = useState<Room[]>([])
 
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://${hostname}`);
-    ws.addEventListener('open', () => {
-      console.log('Connected to backend')
-    });
-    setWebsocket(ws)
+    fetchRooms().then(setAllRooms).catch(console.error)
   },[])
-  const dump  = () => {
-    console.log(hostname)
-    if(!websocket){
-      return
-    }
-    websocket.send(Math.random().toString());
+
+  const renderRoom = (r:Room) => {
+    return (
+      <li key={r.name}>
+        {r.name}
+        <ul>
+          {r.players.map(renderPlayer)}
+        </ul>
+      </li>
+    )
   }
+
+  const renderPlayer = (p:Player) => {
+    return (
+      <li key={p.nickname}>{p.nickname}</li>
+    )
+  }
+  
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={dump}>
-          Talk to {hostname}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div style={{width:'20em', height:'20em', display:'flex', border:'1px solid gray', flexDirection:'column', textAlign:'left'}}>
+      <p>Rooms</p>
+      <ul>
+      {
+        allRooms.map(renderRoom)
+      }
+      </ul>
+    </div>
   )
 }
 

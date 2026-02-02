@@ -19,9 +19,9 @@ services:
 
   frontend:
     container_name: immich-game-frontend
+    environment:
+      - VITE_BACKEND_HOSTNAME=http://localhost:8080/
     build:
-      args:
-        - VITE_BACKEND_HOSTNAME=localhost:8080
       context: client/
     ports:
       - "8081:80"
