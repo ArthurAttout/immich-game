@@ -35,11 +35,13 @@ app.post('/rest/players', (req, res) => {
   }))
 })
 
+const roomsWebSockets:WsRoomEntry[] = []
+
 wss.on('connection', (ws) => {
   ws.on('error', console.error);
 
   ws.on('message', (data) => {
-    console.log('received: %s', data);
+    
   });
 
   ws.send('something');
@@ -48,3 +50,8 @@ server.on('request', app)
 server.listen(8080)
 
 console.log("Server listening on port 8080");
+
+type WsRoomEntry = {
+  roomName:string,
+  connections:WebSocket[]
+}

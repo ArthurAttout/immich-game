@@ -1,15 +1,17 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { Player, Room } from '../domain/Room';
-import type { WebsocketPayload } from '../domain/Datagrams';
+import type { JoinRoomPayload, WebsocketPayload } from '../domain/Datagrams';
 
 
 export type BackendSocketContextValue = {
 	ws:	WebSocket|null, 
-	listenToNewPlayerEvent: (cb:(p:Player) => void) => void
+	listenToNewPlayerEvent: (cb:(p:Player) => void) => void,
+	joinRoom: (roomName:string) => void
 }
 export const BackendSocketContext = createContext<BackendSocketContextValue>({
 	ws:null, 
-	listenToNewPlayerEvent: () => null
+	listenToNewPlayerEvent: () => null,
+	joinRoom: () => {}
 })
 
 export const useBackendSocket = () => {
@@ -35,8 +37,15 @@ export default ({children}:{children:React.ReactNode}) => {
 			}
 		})
 	}
+	const joinRoom = (room:string) => {
+		const joinRoom:JoinRoomPayload = {
+			roomName: room,
+			type: 'join_room_payload'
+		}
+		ws?.send(JSON.stringify(joinRoom))
+	}
 	return (
-		<BackendSocketContext.Provider value={{ws, listenToNewPlayerEvent}}>
+		<BackendSocketContext.Provider value={{ws, listenToNewPlayerEvent, joinRoom}}>
 			{children}
 		</BackendSocketContext.Provider>
 	)

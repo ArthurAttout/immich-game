@@ -2,6 +2,7 @@ import './App.css'
 import { useEffect, useState } from 'react';
 import { useBackendREST } from './Providers/BackendRESTProvider';
 import type { Player, Room } from './domain/Room';
+import { Box } from '@mantine/core';
 
 
 function AdminScreen() {
@@ -32,14 +33,14 @@ function AdminScreen() {
   }
   
   return (
-    <div style={{width:'20em', height:'20em', display:'flex', border:'1px solid gray', flexDirection:'column', textAlign:'left'}}>
+    <Box style={{width:'20em', height:'20em', display:'flex', border:'1px solid gray', flexDirection:'column', textAlign:'left'}}>
       <p>Rooms</p>
       <ul>
       {
         allRooms.map(renderRoom)
       }
       </ul>
-    </div>
+    </Box>
   )
 }
 
