@@ -16,9 +16,9 @@
     "@types/ws": "^8.18.1"
   },
   "dependencies": {
-    "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "unique-username-generator": "^1.5.1",
     "ws": "^8.18.3"
   }
 }
