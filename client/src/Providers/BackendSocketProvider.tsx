@@ -1,20 +1,20 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import type { Player, Room } from '../../../common/Room';
-import type { JoinRoomPayload, WebsocketPayload } from "../../../common/Datagrams";
+import type { WebsocketPayload, WebsocketRegisterPayload, KickPayload } from "../../../common/Datagrams";
 
 
 export type BackendSocketContextValue = {
 	ws:	WebSocket|null, 
 	listenToNewPlayerEvent: (cb:(p:Player[]) => void) => void,
-	listenToWelcomeEvent: (cb:(p:Player) => void) => void,
-	joinRoom: (roomName:string) => void
+	listenToKickPlayerEvent: (cb:() => void) => void,
+	registerWebsocket: (room:string, player:string) => void,
 	unlisten: () => void
 }
 export const BackendSocketContext = createContext<BackendSocketContextValue>({
 	ws:null, 
 	listenToNewPlayerEvent: () => null,
-	listenToWelcomeEvent: () => null,
-	joinRoom: () => {},
+	listenToKickPlayerEvent: () => null,
+	registerWebsocket: () => null,
 	unlisten: () => {}
 })
 
@@ -48,29 +48,37 @@ export default ({children}:{children:React.ReactNode}) => {
 			}
 		})
 	}
-	const listenToWelcomeEvent = (cb:(p:Player) => void) => {
+
+	const listenToKickPlayerEvent = (cb:() => void) => {
 		addEventListener((msg) => {
-			console.log(msg.data)
-			const data = JSON.parse(msg.data) as WebsocketPayload
-			if(data.type === 'welcome_payload'){
-				cb(data.player)
+			const data = JSON.parse(msg.data) as KickPayload
+			if(data.type === 'kick_payload'){
+				cb()
 			}
 		})
 	}
-	const joinRoom = (room:string) => {
-		const joinRoom:JoinRoomPayload = {
+
+	const registerWebsocket = (room:string, player:string) => {
+		const payload:WebsocketRegisterPayload = {
+			playerName: player,
 			roomName: room,
-			type: 'join_room_payload'
+			type: 'websocket_register_payload'
 		}
-		ws?.send(JSON.stringify(joinRoom))
+		ws?.send(JSON.stringify(payload))
 	}
+
 	const unlisten = () => {
 		for(const listener of listeners){
 			ws?.removeEventListener('message', listener)
 		}
 	}
 	return (
-		<BackendSocketContext.Provider value={{ws, listenToNewPlayerEvent, listenToWelcomeEvent,unlisten,joinRoom }}>
+		<BackendSocketContext.Provider value={{ws, 
+			listenToNewPlayerEvent, 
+			listenToKickPlayerEvent,
+			registerWebsocket,
+			unlisten
+		}}>
 			{children}
 		</BackendSocketContext.Provider>
 	)

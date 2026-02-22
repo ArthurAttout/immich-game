@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -12,13 +12,16 @@
   "dependencies": {
     "@mantine/core": "^8.3.14",
     "@mantine/hooks": "^8.3.14",
+    "animate.css": "^4.1.1",
     "i18next": "^25.8.4",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-i18next": "^16.5.4",
-    "react-router": "^7.13.0"
+    "react-icons": "^5.5.0",
+    "react-router": "^7.13.0",
+    "unique-username-generator": "^1.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

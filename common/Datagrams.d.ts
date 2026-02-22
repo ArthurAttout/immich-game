@@ -2,19 +2,20 @@ import type { Player, Room } from "./Room"
 
 export type WebsocketPayload = 
 	| NewPlayerPayload
-	| JoinRoomPayload
-	| WelcomePayload
+	| WebsocketRegisterPayload
+	| KickPayload
 
 
 export type NewPlayerPayload = {
 	type:'new_player_payload',
 	allPlayers: Player[]
 }
-export type WelcomePayload = {
-	type:'welcome_payload',
-	player: Player
+export type WebsocketRegisterPayload = {
+	type:'websocket_register_payload',
+	playerName: string,
+	roomName: string
 }
-export type JoinRoomPayload = {
-	type:'join_room_payload',
-	roomName: string,
+
+export type KickPayload = {
+	type:'kick_payload'
 }
